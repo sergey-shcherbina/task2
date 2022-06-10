@@ -2,12 +2,22 @@
   display: flex;
   flex-direction: column;
   flex-basis: 250px;
+  color: white;
+  font-size: 30px;
 }
 
 .fighter-preview___right {
   align-items: flex-end;
+  /* color: white; */
 }
 
 .fighter-preview___left {
   align-items: flex-start;
+  /* color: white; */
+}
+.fighter-preview___img {
+  height: 300px;
+}
+.fighter-preview-right___img {
+  transform: scaleX(-1);
 }

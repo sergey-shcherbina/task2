@@ -1,13 +1,86 @@
 import { createElement } from '../helpers/domHelper';
 import { createFighterImage } from './fighterPreview';
 
+import { fight, getDamage, getHitPower, getBlockPower } from './fight';
+import { controls } from '../../constants/controls';
+
 export function renderArena(selectedFighters) {
   const root = document.getElementById('root');
   const arena = createArena(selectedFighters);
 
   root.innerHTML = '';
   root.append(arena);
+  
+  console.log(getBlockPower({...selectedFighters[0], defense: 0}))
+  console.log(getBlockPower(selectedFighters[0]))
 
+ 
+  let c;
+  let a = [];
+  let start = Date.now();
+  const func = event => {
+    if (a.length >= 2 || (Date.now() - start) > 2000) {
+      if (a[0] === undefined || a[0] === 'block1' && a[1] === undefined || a[0] === 'block2' && a[1] === undefined ||
+      a[0] === 'block1' && a[1] === 'block1' || a[0] === 'block1' && a[1] === 'block2' || a[0] === 'block2' && a[1] === 'block1' 
+      || a[0] === 'block2' && a[1] === 'block2')  {
+        console.log(getDamage({atack: 0}, {defense: 0}))
+        // return 0
+      }
+      if (a[0] === 'hit1' && a[1] === undefined || a[0] === 'hit1' && a[1] === 'block1' || a[0] === 'block1' && a[1] === 'hit1') {
+        console.log(getDamage(selectedFighters[0], {defense: 0}))
+      }
+      if (a[0] === 'hit2' && a[1] === undefined || a[0] === 'hit2' && a[1] === 'block2' || a[0] === 'block2' && a[1] === 'hit2') {
+        console.log(getDamage(selectedFighters[1], {defense: 0}))
+      }
+      if (a[0] === 'hit1' && a[1] === 'hit1') {
+        console.log(getDamage(selectedFighters[0], {defense: 0}) + getDamage(selectedFighters[0], {defense: 0}))
+      }
+      if (a[0] === 'hit1' && a[1] === 'hit2' || a[0] === 'hit2' && a[1] === 'hit1') {
+        console.log(getDamage(selectedFighters[0], {defense: 0}))
+        console.log(getDamage(selectedFighters[1], {defense: 0}))
+      }
+      if (a[0] === 'hit1' && a[1] === 'block2') {
+        console.log(getDamage(selectedFighters[0], selectedFighters[1]))
+      }
+      if (a[0] === 'hit2' && a[1] === 'hit2') {
+        console.log(getDamage(selectedFighters[1], {defense: 0}) + getDamage(selectedFighters[1], {defense: 0}))
+      
+      }
+      if (a[0] === 'hit2' && a[1] === 'block1') {
+        console.log(getDamage(selectedFighters[1], selectedFighters[0]))
+      }
+      if (a[0] === 'block1' && a[1] === 'hit2') {
+        console.log(getDamage(selectedFighters[1], selectedFighters[0]))
+      }
+      if (a[0] === 'block2' && a[1] === 'hit1') {
+        console.log(getDamage(selectedFighters[0], selectedFighters[1]))
+      }
+      a = []
+    }
+   
+    if (event.code === controls.PlayerOneAttack) {
+      a.push('hit1')
+      start = Date.now()
+    }
+    if (event.code === controls.PlayerOneBlock) {
+      a.push('block1')
+
+      start = Date.now()
+    }
+    if (event.code === controls.PlayerTwoAttack) {
+      a.push('hit2')
+      start = Date.now()
+    }
+    if (event.code === controls.PlayerTwoBlock) {
+      a.push('block2')
+      start = Date.now()
+    }
+    document.removeEventListener('keydown', func)
+  }
+    document.addEventListener('keyup', func)
+    document.addEventListener('keyup', func)
+    
+  
   // todo:
   // - start the fight
   // - when fight is finished show winner
